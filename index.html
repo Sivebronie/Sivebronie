@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Coach - Achieve Your Dreams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .chat-window {
+            background-color: #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #chat-log {
+            height: 200px;
+            overflow-y: scroll;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        a {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Your Career Coach</h1>
+        <p>Select a career path and get coached towards your goals! Links to institutions in Mthatha are provided to help you.</p>
+    </header>
+
+    <!-- Career Selection Section -->
+    <section id="career-selection">
+        <h2>Select Your Career</h2>
+        <form id="career-form">
+            <label for="career">Choose a career:</label>
+            <select id="career" name="career">
+                <option value="software-engineer">Software Engineer</option>
+                <option value="doctor">Doctor</option>
+                <option value="teacher">Teacher</option>
+                <option value="lawyer">Lawyer</option>
+                <option value="nurse">Nurse</option>
+                <option value="data-scientist">Data Scientist</option>
+                <option value="architect">Architect</option>
+                <option value="accountant">Accountant</option>
+                <option value="mechanical-engineer">Mechanical Engineer</option>
+                <option value="graphic-designer">Graphic Designer</option>
+            </select>
+            <button type="button" onclick="startCareerPlan()">Submit</button>
+        </form>
+    </section>
+
+    <!-- Personalized Career Plan Section -->
+    <section id="career-plan" style="display:none;">
+        <h2>Your Career Plan</h2>
+        <div id="career-roadmap">
+            <!-- Dynamic career roadmap based on selection -->
+        </div>
+        <div id="goal-setting">
+            <h3>Set Your Career Goals</h3>
+            <input type="text" id="career-goal" placeholder="Enter your career goal">
+            <button type="button" onclick="setCareerGoal()">Set Goal</button>
+        </div>
+        <div id="progress-tracker">
+            <h3>Your Progress</h3>
+            <p>Track your progress toward your career goals!</p>
+        </div>
+    </section>
+
+    <!-- Resume Builder Section -->
+    <section id="resume-builder">
+        <h2>Resume Builder</h2>
+        <form id="resume-form">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" placeholder="Your Full Name">
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Your Email">
+            <label for="experience">Work Experience:</label>
+            <textarea id="experience" placeholder="List your previous work experience"></textarea>
+            <button type="button" onclick="generateResume()">Generate Resume</button>
+        </form>
+        <div id="resume-output"></div>
+    </section>
+
+    <!-- Skill Assessment Section -->
+    <section id="skills-assessment">
+        <h2>Skills Assessment</h2>
+        <p>Take a quick quiz to evaluate your current skills.</p>
+        <form id="skills-form">
+            <label>How would you rate your current knowledge in your chosen field?</label>
+            <select id="skill-level">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+            <button type="button" onclick="submitAssessment()">Submit</button>
+        </form>
+        <div id="assessment-result"></div>
+    </section>
+
+    <!-- Motivational Quotes Section -->
+    <section id="motivation">
+        <h2>Daily Motivation</h2>
+        <div id="motivational-content">
+            <!-- Dynamic motivational quotes or videos will be displayed here -->
+        </div>
+    </section>
+
+    <!-- Mthatha Institutions Section -->
+    <section id="institutions">
+        <h2>Institutions in Mthatha</h2>
+        <p>Here are some institutions in Mthatha that can help you achieve your career goals:</p>
+        <ul>
+            <li><a href="https://www.wsu.ac.za" target="_blank">Walter Sisulu University</a> - Offers a range of degrees from Engineering to Education.</li>
+            <li><a href="https://www.ects.edu.za" target="_blank">Eastern Cape Technikon</a> - Offers technical and vocational training to help develop in-demand skills.</li>
+            <li><a href="https://www.health.gov.za" target="_blank">Mthatha General Hospital</a> - For medical students and professionals seeking internships or experience.</li>
+        </ul>
+    </section>
+
+    <!-- Chatbot Brono Section -->
+    <section id="chatbot">
+        <h2>Chat with Brono</h2>
+        <div class="chat-window">
+            <div id="chat-log"></div>
+            <input type="text" id="user-input" placeholder="Type your message here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </section>
+
+    <script>
+        function startCareerPlan() {
+            const selectedCareer = document.getElementById('career').value;
+            document.getElementById('career-selection').style.display = 'none';
+            document.getElementById('career-plan').style.display = 'block';
+
+            const roadmap = getCareerRoadmap(selectedCareer);
+            document.getElementById('career-roadmap').innerHTML = `<p>${roadmap}</p>`;
+        }
+
+        function getCareerRoadmap(career) {
+            const roadmaps = {
+                'software-engineer': 'Step 1: Learn programming languages, Step 2: Build projects, Step 3: Apply for internships...',
+                'doctor': 'Step 1: Complete pre-med, Step 2: Pass the MCAT, Step 3: Attend medical school...',
+                'teacher': 'Step 1: Earn a teaching degree, Step 2: Complete teaching certification...',
+                'lawyer': 'Step 1: Earn a law degree, Step 2: Pass the bar exam, Step 3: Gain experience in a law firm...',
+                'nurse': 'Step 1: Complete nursing school, Step 2: Pass the NCLEX exam, Step 3: Gain clinical experience...',
+                'data-scientist': 'Step 1: Learn programming (Python, R), Step 2: Get comfortable with data analysis tools...',
+                'architect': 'Step 1: Earn a degree in architecture, Step 2: Gain experience in a firm, Step 3: Get licensed...',
+                'accountant': 'Step 1: Earn an accounting degree, Step 2: Pass the CPA exam, Step 3: Gain experience in a firm...',
+                'mechanical-engineer': 'Step 1: Earn a mechanical engineering degree, Step 2: Gain internship experience...',
+                'graphic-designer': 'Step 1: Learn design tools (Photoshop, Illustrator), Step 2: Build a portfolio, Step 3: Freelance or find a job...'
+            };
+
+            return roadmaps[career] || 'Career path not found. Please select a valid career.';
+        }
+
+        function setCareerGoal() {
+            const goal = document.getElementById('career-goal').value;
+            if (goal) {
+                document.getElementById('progress-tracker').innerHTML += `<p><strong>Goal:</strong> ${goal}</p>`;
+            }
+        }
+
+        function generateResume() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const experience = document.getElementById('experience
+          ').value;
+
+            if (name && email && experience) {
+                document.getElementById('resume-output').innerHTML = `
+                    <h3>Your Resume</h3>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Experience:</strong> ${experience}</p>
+                `;
+            } else {
+                alert("Please fill in all fields to generate your resume.");
+            }
+        }
+
+        function submitAssessment() {
+            const skillLevel = document.getElementById('skill-level').value;
+            let feedback = '';
+
+            if (skillLevel === 'beginner') {
+                feedback = 'You are at the beginning of your journey. Focus on learning the fundamentals.';
+            } else if (skillLevel === 'intermediate') {
+                feedback = 'You have a good foundation! Keep building your skills and take on new challenges.';
+            } else if (skillLevel === 'advanced') {
+                feedback = 'You are well on your way to becoming an expert! Keep pushing your limits.';
+            }
+
+            document.getElementById('assessment-result').innerHTML = `<p><strong>Feedback:</strong> ${feedback}</p>`;
+        }
+
+        function sendMessage() {
+            const userMessage = document.getElementById('user-input').value;
+            const chatLog = document.getElementById('chat-log');
+
+            if (userMessage) {
+                chatLog.innerHTML += `<p><strong>You:</strong> ${userMessage}</p>`;
+                document.getElementById('user-input').value = ''; // Clear input field
+
+                // Simulate Brono response
+                setTimeout(() => {
+                    const bronoResponse = getBronoResponse(userMessage);
+                    chatLog.innerHTML += `<p><strong>Brono:</strong> ${bronoResponse}</p>`;
+                    chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the bottom
+                }, 1000);
+            }
+        }
+
+        function getBronoResponse(message) {
+            const responses = {
+                "hi": "Hello! How can I assist you with your career goals today?",
+                "how can i improve my grades?": "To improve your grades, focus on consistent study habits, eliminate distractions, and don’t hesitate to ask for help when needed. Try breaking your study sessions into manageable chunks.",
+                "help me focus": "To stay focused, set clear goals, create a distraction-free environment, and take regular breaks to stay refreshed. Time management is key.",
+                "what's the best way to study?": "The best way to study is to use active recall and spaced repetition. Engage with the material by asking questions, teaching others, and practicing consistently.",
+                "how do i choose a career?": "Choosing a career involves understanding your strengths, interests, and values. Take some time to reflect on what excites you and aligns with your long-term goals.",
+                "thank you": "You're welcome! I'm always here to help you on your journey.",
+                "who are you?": "I’m Brono, your virtual career guide. I'm here to assist you with any questions you have, whether it’s about your studies, career path, or personal development."
+            };
+
+            // Return a default response if the user's message doesn't match predefined ones
+            return responses[message.toLowerCase()] || "I'm here to help! Feel free to ask any questions about your career, studies, or motivation.";
+        }
+    </script>
+</body>
+</html>
